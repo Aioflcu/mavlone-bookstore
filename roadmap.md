@@ -1,11 +1,10 @@
 # Mavlonebook build roadmap
 
 - [x] Study mayobook.com structure and page list
-- [x] Payment eligibility check → Paystack (BYO keys) for NG seller
+- [x] Payment eligibility check → Paystack (client's keys) for NG seller
 - [x] Enable Lovable Cloud
-- [ ] Database migration: profiles, user_roles, categories, collections, books, orders, order_items + RLS + grants
+- [ ] Database migration: profiles, user_roles, categories, collections, books, orders, order_items + RLS + grants + seed books
 - [ ] Storage buckets: covers (public), ebook files (private), audio files (private)
-- [ ] Seed sample books in migration
 - [ ] Design system (styles.css): warm paper & ink tokens, Fraunces + Inter fonts
 - [ ] Auth: enable email auth, configure Google + Lovable sign-in, auth pages, reset password
 - [ ] Public pages: home, store, book detail, collections, audiobooks, topics, articles, about, contact, policies
