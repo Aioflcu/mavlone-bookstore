@@ -230,3 +230,14 @@
     display: none;
   }
 }
+
+/* Typographic book cover palette */
+:root {
+  --cover-pine: oklch(0.42 0.07 160);
+  --cover-terra: oklch(0.55 0.125 45);
+  --cover-ink: oklch(0.3 0.03 50);
+  --cover-brass: oklch(0.76 0.1 80);
+  --cover-slate: oklch(0.45 0.05 235);
+  --cover-olive: oklch(0.55 0.07 110);
+  --cover-paper: oklch(0.97 0.012 84);
+}
