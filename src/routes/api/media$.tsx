@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * Streams cover images from the (private) storage bucket so readers see them
  * without exposing bucket URLs. Format: /api/media/covers/<object-path>
  */
-export const Route = createFileRoute("/api/media/$")({
+export const Route = createFileRoute("/api/media$")({
   server: {
     handlers: {
       GET: async ({ params }) => {
