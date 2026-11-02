@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { BookCover, BookGrid } from "@/components/site/BookCard";
 import { listCollections } from "@/server/public-data";
 
 export const Route = createFileRoute("/collections")({
@@ -44,6 +43,3 @@ function CollectionsPage() {
     </div>
   );
 }
-
-// Re-exported so the shared BookCover/BookGrid helpers stay referenced.
-export { BookCover, BookGrid };
