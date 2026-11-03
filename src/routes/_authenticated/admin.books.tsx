@@ -52,7 +52,7 @@ const EMPTY: BookInput = {
   stock_print: null,
 };
 
-type Draft = BookInput & { id?: string };
+type Draft = BookInput & { id?: string | undefined };
 
 function AdminBooks() {
   const { books, categories, collections } = Route.useLoaderData();
@@ -74,7 +74,6 @@ function AdminBooks() {
       await upsertBook({ data: draft });
       toast.success(draft.id ? "Book updated" : "Book created");
       setDraft(null);
-      await Route.useLoaderData(); // noop to keep hook order stable
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {

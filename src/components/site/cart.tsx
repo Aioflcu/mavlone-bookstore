@@ -39,7 +39,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw) as CartItem[]);
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          setItems(
+            parsed.filter(
+              (i): i is CartItem =>
+                typeof i === "object" &&
+                i !== null &&
+                typeof (i as CartItem).bookId === "string" &&
+                typeof (i as CartItem).title === "string" &&
+                typeof (i as CartItem).price === "number",
+            ),
+          );
+        }
+      }
     } catch {
       // ignore corrupted cart data
     }

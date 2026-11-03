@@ -138,10 +138,9 @@ export const createCheckout = createServerFn({ method: "POST" })
     };
   });
 
-async function markOrderPaid(orderId: string, ref: string, admin: {
-  from: (t: string) => any;
-}) {
-  await admin
+async function markOrderPaid(orderId: string, ref: string) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  await supabaseAdmin
     .from("orders")
     .update({ status: "paid", paid_at: new Date().toISOString(), payment_ref: ref })
     .eq("id", orderId);
@@ -185,8 +184,7 @@ export const confirmOrder = createServerFn({ method: "POST" })
     }
 
     if (order.status !== "paid") {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await markOrderPaid(orderId, data.reference, supabaseAdmin);
+      await markOrderPaid(orderId, data.reference);
     }
 
     return { paid: true as const, orderId, message: null };
