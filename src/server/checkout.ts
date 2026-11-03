@@ -184,8 +184,7 @@ export const confirmOrder = createServerFn({ method: "POST" })
     }
 
     if (order.status !== "paid") {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await markOrderPaid(orderId, data.reference, supabaseAdmin);
+      await markOrderPaid(orderId, data.reference);
     }
 
     return { paid: true as const, orderId, message: null };
