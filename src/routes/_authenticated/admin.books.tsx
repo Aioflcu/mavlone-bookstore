@@ -74,7 +74,6 @@ function AdminBooks() {
       await upsertBook({ data: draft });
       toast.success(draft.id ? "Book updated" : "Book created");
       setDraft(null);
-      await Route.useLoaderData(); // noop to keep hook order stable
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {
