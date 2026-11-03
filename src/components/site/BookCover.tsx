@@ -39,7 +39,7 @@ export function BookCover({
       />
     );
   }
-  const p = PALETTES[hashString(book.slug) % PALETTES.length];
+  const p = PALETTES[hashString(book.slug) % PALETTES.length] ?? PALETTES[0]!;
   return (
     <div
       className={cn(

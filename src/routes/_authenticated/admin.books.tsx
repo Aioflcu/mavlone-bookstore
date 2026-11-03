@@ -52,7 +52,7 @@ const EMPTY: BookInput = {
   stock_print: null,
 };
 
-type Draft = BookInput & { id?: string };
+type Draft = BookInput & { id?: string | undefined };
 
 function AdminBooks() {
   const { books, categories, collections } = Route.useLoaderData();
