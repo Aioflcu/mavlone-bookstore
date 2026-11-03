@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  Audiobook,
+  AudioLines,
   Download,
   Globe2,
   LibraryBig,
