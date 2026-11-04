@@ -4,17 +4,17 @@ import { BookGrid } from "@/components/site/BookCard";
 import { getCollection } from "@/server/public-data";
 
 export const Route = createFileRoute("/collections/$slug")({
-  loader: ({ params }) => {
-    const data = getCollection({ data: { slug: params.slug } });
+  loader: async ({ params }) => {
+    const data = await getCollection({ data: { slug: params.slug } });
     if (!data.collection) throw notFound();
     return data;
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData.collection?.title ?? "Collection"} — Mavlonebook` },
-      { name: "description", content: loaderData.collection?.description ?? "A curated book collection on Mavlonebook." },
-      { property: "og:title", content: loaderData.collection?.title ?? "Collection" },
-      { property: "og:description", content: loaderData.collection?.description ?? "" },
+      { title: `${loaderData?.collection?.title ?? "Collection"} — Mavlonebook` },
+      { name: "description", content: loaderData?.collection?.description ?? "A curated book collection on Mavlonebook." },
+      { property: "og:title", content: loaderData?.collection?.title ?? "Collection" },
+      { property: "og:description", content: loaderData?.collection?.description ?? "" },
     ],
   }),
   notFoundComponent: () => <p className="px-4 py-24 text-center text-sm">Collection not found.</p>,

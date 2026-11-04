@@ -12,10 +12,10 @@ export const Route = createFileRoute("/articles/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData.article.title} — Mavlonebook` },
-      { name: "description", content: loaderData.article.excerpt },
-      { property: "og:title", content: loaderData.article.title },
-      { property: "og:description", content: loaderData.article.excerpt },
+      { title: `${loaderData?.article?.title ?? "Article"} — Mavlonebook` },
+      { name: "description", content: loaderData?.article?.excerpt ?? "An article from Mavlonebook." },
+      { property: "og:title", content: loaderData?.article?.title ?? "Article" },
+      { property: "og:description", content: loaderData?.article?.excerpt ?? "" },
       { property: "og:type", content: "article" },
     ],
   }),

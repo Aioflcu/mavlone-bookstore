@@ -2,7 +2,8 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { Check, Download, Headphones, Minus, Plus, ShoppingCart, Truck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BookCover, BookGrid, Rating } from "@/components/site/BookCard";
+import { BookGrid, Rating } from "@/components/site/BookCard";
+import { BookCover } from "@/components/site/BookCover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice, FORMAT_LABELS } from "@/lib/format";
@@ -10,21 +11,21 @@ import { useCart } from "@/components/site/cart";
 import { getBook } from "@/server/public-data";
 
 export const Route = createFileRoute("/books/$slug")({
-  loader: ({ params }) => {
-    const data = getBook({ data: { slug: params.slug } });
+  loader: async ({ params }) => {
+    const data = await getBook({ data: { slug: params.slug } });
     if (!data.book) throw notFound();
     return data;
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData.book?.title ?? "Book"} — Mavlonebook` },
+      { title: `${loaderData?.book?.title ?? "Book"} — Mavlonebook` },
       {
         name: "description",
         content:
-          loaderData.book?.short_description ?? `Read ${loaderData.book?.title} on Mavlonebook.`,
+          loaderData?.book?.short_description ?? `Read ${loaderData?.book?.title ?? "this book"} on Mavlonebook.`,
       },
-      { property: "og:title", content: loaderData.book?.title ?? "Book" },
-      { property: "og:description", content: loaderData.book?.short_description ?? "" },
+      { property: "og:title", content: loaderData?.book?.title ?? "Book" },
+      { property: "og:description", content: loaderData?.book?.short_description ?? "" },
       { property: "og:type", content: "book" },
     ],
   }),
@@ -48,7 +49,8 @@ type FormatOption = {
 };
 
 function BookDetail() {
-  const { book, related } = Route.useLoaderData();
+  const { book: maybeBook, related } = Route.useLoaderData();
+  const book = maybeBook!;
   const navigate = useNavigate();
   const { add } = useCart();
   const [qty, setQty] = useState(1);
@@ -80,7 +82,7 @@ function BookDetail() {
       : null,
   ].filter(Boolean) as FormatOption[];
 
-  const [selected, setSelected] = useState<FormatOption>(options[0]);
+  const [selected, setSelected] = useState<FormatOption>(options[0]!);
   const selectedPrice = selected.price ?? 0;
 
   function addToCart() {
