@@ -29,15 +29,15 @@ export type BookWithCategory = BookRow & {
 };
 
 export interface BookFilters {
-  format?: "ebook" | "paperback" | "audiobook";
-  category?: string;
-  collection?: string;
-  q?: string;
-  sort?: "newest" | "rating" | "price_asc" | "price_desc";
-  featured?: boolean;
-  bestseller?: boolean;
-  newRelease?: boolean;
-  limit?: number;
+  format?: "ebook" | "paperback" | "audiobook" | undefined;
+  category?: string | undefined;
+  collection?: string | undefined;
+  q?: string | undefined;
+  sort?: "newest" | "rating" | "price_asc" | "price_desc" | undefined;
+  featured?: boolean | undefined;
+  bestseller?: boolean | undefined;
+  newRelease?: boolean | undefined;
+  limit?: number | undefined;
 }
 
 export const listBooks = createServerFn({ method: "GET" })
