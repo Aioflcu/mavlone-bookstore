@@ -1,7 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 import type { BookWithCategory } from "./public-data";
+
+function stripUndefined(obj: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined));
+}
 
 async function requireAdmin(context: { supabase: { rpc: Function }; userId: string }) {
   const { data } = await context.supabase.rpc("has_role", {
@@ -82,18 +87,20 @@ export const upsertBook = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { supabase } = context;
-    const { id, ...values } = data;
+    const { id, ...input } = data;
     if (id) {
+      const values = stripUndefined(input);
       const { error } = await supabase
         .from("books")
-        .update({ ...values, updated_at: new Date().toISOString() })
+        .update(values as Database["public"]["Tables"]["books"]["Update"])
         .eq("id", id);
       if (error) throw new Error(error.message);
       return { id };
     }
+    const values = stripUndefined(input);
     const { data: created, error } = await supabase
       .from("books")
-      .insert(values)
+      .insert(values as Database["public"]["Tables"]["books"]["Insert"])
       .select("id")
       .single();
     if (error || !created) throw new Error(error?.message ?? "Could not create book");
@@ -151,13 +158,21 @@ export const upsertCategory = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => catalogSchema.parse(input))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    const { id, title: _t, cover_url: _c, featured: _f, ...values } = data;
+    const { id, ...input } = data;
+    const values = stripUndefined(input) as Database["public"]["Tables"]["categories"]["Insert"];
     if (id) {
-      const { error } = await context.supabase.from("categories").update(values).eq("id", id);
+      const { error } = await context.supabase
+        .from("categories")
+        .update(values as Database["public"]["Tables"]["categories"]["Update"])
+        .eq("id", id);
       if (error) throw new Error(error.message);
       return { id };
     }
-    const { data: created, error } = await context.supabase.from("categories").insert(values).select("id").single();
+    const { data: created, error } = await context.supabase
+      .from("categories")
+      .insert(values)
+      .select("id")
+      .single();
     if (error || !created) throw new Error(error?.message ?? "Could not create");
     return { id: created.id };
   });
@@ -167,14 +182,21 @@ export const upsertCollection = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => catalogSchema.parse(input))
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    const { id, name: _n, title, description, cover_url, featured } = data;
-    const values = { title, description, cover_url, featured };
+    const { id, ...input } = data;
+    const values = stripUndefined(input) as Database["public"]["Tables"]["collections"]["Insert"];
     if (id) {
-      const { error } = await context.supabase.from("collections").update(values).eq("id", id);
+      const { error } = await context.supabase
+        .from("collections")
+        .update(values as Database["public"]["Tables"]["collections"]["Update"])
+        .eq("id", id);
       if (error) throw new Error(error.message);
       return { id };
     }
-    const { data: created, error } = await context.supabase.from("collections").insert(values).select("id").single();
+    const { data: created, error } = await context.supabase
+      .from("collections")
+      .insert(values)
+      .select("id")
+      .single();
     if (error || !created) throw new Error(error?.message ?? "Could not create");
     return { id: created.id };
   });
