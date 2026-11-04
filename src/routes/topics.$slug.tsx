@@ -14,10 +14,10 @@ export const Route = createFileRoute("/topics/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData.category?.name ?? "Topic"} books — Mavlonebook` },
-      { name: "description", content: loaderData.category?.description ?? `Browse ${loaderData.category?.name} books on Mavlonebook.` },
-      { property: "og:title", content: `${loaderData.category?.name ?? "Topic"} — Mavlonebook` },
-      { property: "og:description", content: loaderData.category?.description ?? "" },
+      { title: `${loaderData?.category?.name ?? "Topic"} books — Mavlonebook` },
+      { name: "description", content: loaderData?.category?.description ?? `Browse ${loaderData?.category?.name ?? "this topic"} books on Mavlonebook.` },
+      { property: "og:title", content: `${loaderData?.category?.name ?? "Topic"} — Mavlonebook` },
+      { property: "og:description", content: loaderData?.category?.description ?? "" },
     ],
   }),
   notFoundComponent: () => <p className="px-4 py-24 text-center text-sm">Topic not found.</p>,

@@ -20,7 +20,12 @@ export const Route = createFileRoute("/checkout-confirm")({
 
 function zodSearch() {
   return (search: Record<string, unknown>) => ({
-    reference: typeof search.reference === "string" ? search.reference : typeof search.trxref === "string" ? search.trxref : undefined,
+    reference:
+      typeof search["reference"] === "string"
+        ? search["reference"]
+        : typeof search["trxref"] === "string"
+          ? search["trxref"]
+          : undefined,
   });
 }
 

@@ -38,13 +38,13 @@ function isCartItem(i: unknown): i is CartItem {
   if (typeof i !== "object" || i === null) return false;
   const c = i as Record<string, unknown>;
   return (
-    typeof c.bookId === "string" &&
-    typeof c.slug === "string" &&
-    typeof c.title === "string" &&
-    typeof c.author === "string" &&
-    typeof c.price === "number" &&
-    typeof c.qty === "number" &&
-    (FORMATS as readonly unknown[]).includes(c.format)
+    typeof c["bookId"] === "string" &&
+    typeof c["slug"] === "string" &&
+    typeof c["title"] === "string" &&
+    typeof c["author"] === "string" &&
+    typeof c["price"] === "number" &&
+    typeof c["qty"] === "number" &&
+    (FORMATS as readonly unknown[]).includes(c["format"])
   );
 }
 
@@ -94,7 +94,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
             next[idx] = { ...next[idx], qty: next[idx].qty + qty };
             return next;
           }
-          return [...prev, { ...item, qty }];
+          return [
+            ...prev,
+            {
+              bookId: item.bookId,
+              slug: item.slug,
+              title: item.title,
+              author: item.author,
+              format: item.format,
+              price: item.price,
+              coverUrl: item.coverUrl ?? null,
+              qty,
+            },
+          ];
         }),
       remove: (bookId, format) => setItems((prev) => prev.filter((i) => !sameItem(i, bookId, format))),
       setQty: (bookId, format, qty) =>

@@ -9,8 +9,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import heroImage from "@/assets/hero-library.jpg";
-import { BookCover, BookGrid } from "@/components/site/BookCard";
-import { Rating } from "@/components/site/BookCard";
+import { BookGrid, Rating } from "@/components/site/BookCard";
+import { BookCover } from "@/components/site/BookCover";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 import { getHomeData } from "@/server/public-data";
@@ -96,7 +96,7 @@ function Home() {
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link to="/audiobooks">
-                  <Audiobook className="size-4" /> Browse audiobooks
+                  <AudioLines className="size-4" /> Browse audiobooks
                 </Link>
               </Button>
             </div>

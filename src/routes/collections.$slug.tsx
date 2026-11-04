@@ -22,7 +22,8 @@ export const Route = createFileRoute("/collections/$slug")({
 });
 
 function CollectionPage() {
-  const { collection, books } = Route.useLoaderData();
+  const { collection: col, books } = Route.useLoaderData();
+  const collection = col!;
   return (
     <div>
       <section className="ink-panel">
