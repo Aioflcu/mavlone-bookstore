@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatPrice, FORMAT_LABELS } from "@/lib/format";
-import { listAdminOrders, updateOrderStatus } from "@/server/admin";
+import { listAdminOrders, updateOrderStatus } from "@/lib/admin";
 
 export const Route = createFileRoute("/_authenticated/admin/orders")({
   loader: () => listAdminOrders(),

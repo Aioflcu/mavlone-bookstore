@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { BookGrid } from "@/components/site/BookCard";
-import { listBooks, listCategories } from "@/server/public-data";
+import { listBooks, listCategories } from "@/lib/public-data";
 
 export const Route = createFileRoute("/topics/$slug")({
   loader: async ({ params }) => {

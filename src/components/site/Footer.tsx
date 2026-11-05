@@ -4,7 +4,7 @@ import { BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { submitContact } from "@/server/contact";
+import { submitContact } from "@/lib/contact";
 
 const COLUMNS = [
   {

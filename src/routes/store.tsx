@@ -5,7 +5,7 @@ import { BookGrid } from "@/components/site/BookCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { listBooks, listCategories, type BookFilters } from "@/server/public-data";
+import { listBooks, listCategories, type BookFilters } from "@/lib/public-data";
 
 const searchSchema = z.object({
   format: z.enum(["ebook", "paperback", "audiobook"]).optional(),

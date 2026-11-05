@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { BookRow } from "@/server/public-data";
+import type { BookRow } from "@/lib/public-data";
 
 /**
  * Typographic cover used when a book has no uploaded cover image yet.

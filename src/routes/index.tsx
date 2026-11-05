@@ -13,7 +13,7 @@ import { BookGrid, Rating } from "@/components/site/BookCard";
 import { BookCover } from "@/components/site/BookCover";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
-import { getHomeData } from "@/server/public-data";
+import { getHomeData } from "@/lib/public-data";
 
 export const Route = createFileRoute("/")({
   loader: () => getHomeData(),

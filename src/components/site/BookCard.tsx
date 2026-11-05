@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatPrice, FORMAT_LABELS } from "@/lib/format";
 import { BookCover } from "./BookCover";
-import type { BookWithCategory } from "@/server/public-data";
+import type { BookWithCategory } from "@/lib/public-data";
 
 export function Rating({ value, count }: { value: number | null; count?: number | null }) {
   const v = value ?? 0;
