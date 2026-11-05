@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { listCollections } from "@/server/public-data";
+import { listCollections } from "@/lib/public-data";
 
 export const Route = createFileRoute("/collections")({
   loader: () => listCollections(),

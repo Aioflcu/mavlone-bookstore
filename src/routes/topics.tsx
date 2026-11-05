@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { listCategories, listBooks } from "@/server/public-data";
+import { listCategories, listBooks } from "@/lib/public-data";
 import { BookCover } from "@/components/site/BookCover";
 
 export const Route = createFileRoute("/topics")({

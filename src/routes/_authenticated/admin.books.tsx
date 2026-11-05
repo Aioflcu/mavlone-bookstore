@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/format";
-import { deleteBook, listAdminBooks, upsertBook, type BookInput } from "@/server/admin";
+import { deleteBook, listAdminBooks, upsertBook, type BookInput } from "@/lib/admin";
 import { supabase } from "@/integrations/supabase/client";
-import type { BookWithCategory } from "@/server/public-data";
+import type { BookWithCategory } from "@/lib/public-data";
 
 export const Route = createFileRoute("/_authenticated/admin/books")({
   loader: () => listAdminBooks(),

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { BookGrid } from "@/components/site/BookCard";
-import { getCollection } from "@/server/public-data";
+import { getCollection } from "@/lib/public-data";
 
 export const Route = createFileRoute("/collections/$slug")({
   loader: async ({ params }) => {

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Lock, LayoutDashboard, BookOpen, Package, Tags } from "lucide-react";
-import { isAdmin } from "@/server/checkout";
+import { isAdmin } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({

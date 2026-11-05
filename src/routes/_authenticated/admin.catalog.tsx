@@ -12,7 +12,7 @@ import {
   listAdminBooks,
   upsertCategory,
   upsertCollection,
-} from "@/server/admin";
+} from "@/lib/admin";
 
 export const Route = createFileRoute("/_authenticated/admin/catalog")({
   loader: () => listAdminBooks(),

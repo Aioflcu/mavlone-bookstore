@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, DollarSign, Package, Clock } from "lucide-react";
-import { getAdminOverview } from "@/server/admin";
+import { getAdminOverview } from "@/lib/admin";
 import { formatPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/")({

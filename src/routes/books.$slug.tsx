@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice, FORMAT_LABELS } from "@/lib/format";
 import { useCart } from "@/components/site/cart";
-import { getBook } from "@/server/public-data";
+import { getBook } from "@/lib/public-data";
 
 export const Route = createFileRoute("/books/$slug")({
   loader: async ({ params }) => {

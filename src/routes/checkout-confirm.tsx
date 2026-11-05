@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CircleCheck, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { confirmOrder, createDownloadUrl } from "@/server/checkout";
+import { confirmOrder, createDownloadUrl } from "@/lib/checkout";
 
 export const Route = createFileRoute("/checkout-confirm")({
   ssr: false,

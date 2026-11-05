@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/components/site/cart";
 import { useSession } from "@/hooks/use-session";
 import { formatPrice, FORMAT_LABELS } from "@/lib/format";
-import { createCheckout } from "@/server/checkout";
+import { createCheckout } from "@/lib/checkout";
 
 export const Route = createFileRoute("/checkout")({
   ssr: false,

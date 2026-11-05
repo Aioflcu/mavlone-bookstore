@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { formatPrice, formatDate, FORMAT_LABELS } from "@/lib/format";
-import { createDownloadUrl, getMyAccount } from "@/server/checkout";
+import { createDownloadUrl, getMyAccount } from "@/lib/checkout";
 import { supabase } from "@/integrations/supabase/client";
 
 const searchSchema = z.object({ tab: z.enum(["library", "orders", "profile"]).optional() });

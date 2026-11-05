@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Headphones } from "lucide-react";
 import { BookGrid } from "@/components/site/BookCard";
 import { Button } from "@/components/ui/button";
-import { listBooks } from "@/server/public-data";
+import { listBooks } from "@/lib/public-data";
 
 export const Route = createFileRoute("/audiobooks")({
   loader: () => listBooks({ data: { format: "audiobook", limit: 60 } }),
