@@ -89,9 +89,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       add: (item, qty = 1) =>
         setItems((prev) => {
           const idx = prev.findIndex((i) => sameItem(i, item.bookId, item.format));
-          if (idx >= 0) {
+          const existing = prev[idx];
+          if (idx >= 0 && existing) {
             const next = [...prev];
-            next[idx] = { ...next[idx], qty: next[idx].qty + qty };
+            next[idx] = { ...existing, qty: existing.qty + qty };
             return next;
           }
           return [
