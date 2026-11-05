@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
-import { getRequest } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const cartItemSchema = z.object({
@@ -85,7 +85,10 @@ export const createCheckout = createServerFn({ method: "POST" })
         subtotal,
         total: subtotal,
         payment_provider: "paystack",
-        ...(data.shipping ?? {}),
+        shipping_name: data.shipping?.name ?? null,
+        shipping_address: data.shipping?.address ?? null,
+        shipping_city: data.shipping?.city ?? null,
+        shipping_country: data.shipping?.country ?? null,
       })
       .select("id")
       .single();
@@ -200,7 +203,7 @@ export const createDownloadUrl = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { data: item, error } = await supabase
       .from("order_items")
-      .select("id, order_id, orders!inner(id, user_id, status), books(ebook_file_path, audio_file_path)")
+      .select("id, format, order_id, orders!inner(id, user_id, status), books(ebook_file_path, audio_file_path)")
       .eq("id", data.orderItemId)
       .maybeSingle();
     if (error || !item) throw new Error("Download not found");

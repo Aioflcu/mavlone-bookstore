@@ -160,12 +160,13 @@ export interface HomeData {
 
 export const getHomeData = createServerFn({ method: "GET" }).handler(async (): Promise<HomeData> => {
   const supabase = await publicClient();
-  const base = supabase.from("books").select("*, categories(name, slug)").eq("status", "published");
+  const q = () =>
+    supabase.from("books").select("*, categories(name, slug)").eq("status", "published");
   const [featured, bestsellers, newReleases, audiobooks, categories, collections] = await Promise.all([
-    base.clone().eq("featured", true).order("rating", { ascending: false }).limit(5),
-    base.clone().eq("bestseller", true).order("ratings_count", { ascending: false }).limit(6),
-    base.clone().eq("new_release", true).order("created_at", { ascending: false }).limit(6),
-    base.clone().contains("formats", ["audiobook"]).limit(6),
+    q().eq("featured", true).order("rating", { ascending: false }).limit(5),
+    q().eq("bestseller", true).order("ratings_count", { ascending: false }).limit(6),
+    q().eq("new_release", true).order("created_at", { ascending: false }).limit(6),
+    q().contains("formats", ["audiobook"]).limit(6),
     supabase.from("categories").select("*").order("name"),
     supabase.from("collections").select("*").eq("featured", true).limit(2),
   ]);
