@@ -13,10 +13,28 @@ import { BookGrid, Rating } from "@/components/site/BookCard";
 import { BookCover } from "@/components/site/BookCover";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
-import { getHomeData } from "@/lib/public-data";
+import { getHomeData, type HomeData } from "@/lib/public-data";
+
+// Defensive fallback: if the backend blips, render the shell instead of a
+// server-wide 500. Each section hides itself when its list is empty.
+const emptyHome: HomeData = {
+  featured: [],
+  bestsellers: [],
+  newReleases: [],
+  audiobooks: [],
+  categories: [],
+  collections: [],
+};
 
 export const Route = createFileRoute("/")({
-  loader: () => getHomeData(),
+  loader: async () => {
+    try {
+      return await getHomeData();
+    } catch (error) {
+      console.error("Home data failed to load, rendering empty state", error);
+      return emptyHome;
+    }
+  },
   head: () => ({
     meta: [
       { title: "Mavlonebook — Books that move you forward" },
