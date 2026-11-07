@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 
@@ -58,10 +57,11 @@ function AuthPage() {
 
   async function oauth() {
     if (next) window.sessionStorage.setItem(NEXT_KEY, safeNext(next));
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
     });
-    if (result.error) toast.error(result.error.message ?? "Sign-in failed");
+    if (error) toast.error(error.message || "Sign-in failed");
   }
 
   async function submit(e: React.FormEvent) {
