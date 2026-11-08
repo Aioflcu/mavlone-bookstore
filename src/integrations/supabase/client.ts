@@ -63,10 +63,14 @@ function createSupabaseClient() {
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     global: {
       fetch: createSupabaseFetch(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY),
+      headers: {
+        'x-client-info': 'mavlone-bookstore-firebase',
+      },
     },
     auth: {
       persistSession: true,
       autoRefreshToken: true,
+      detectSessionInUrl: false,
     },
   });
 }
