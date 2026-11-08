@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
+import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
 
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup", "reset"]).optional(),
@@ -48,7 +48,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
 
-  // After an OAuth return (or any sign-in), honor the stored destination.
+  // After a Supabase sign-in, honor the stored destination.
   useEffect(() => {
     if (!session) return;
     const stored = window.sessionStorage.getItem(NEXT_KEY);
@@ -58,10 +58,13 @@ function AuthPage() {
 
   async function oauth() {
     if (next) window.sessionStorage.setItem(NEXT_KEY, safeNext(next));
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) toast.error(result.error.message ?? "Sign-in failed");
+    try {
+      await signInWithPopup(auth, googleProvider);
+      window.sessionStorage.removeItem(NEXT_KEY);
+      await navigate({ to: safeNext(next ?? "/"), replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign-in failed");
+    }
   }
 
   async function submit(e: React.FormEvent) {
