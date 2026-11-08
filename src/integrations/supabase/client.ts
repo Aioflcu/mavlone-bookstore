@@ -19,7 +19,8 @@ function createSupabaseClient() {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
-      detectSessionInUrl: false,
+      // Supabase must process the OAuth callback URL to establish the session.
+      detectSessionInUrl: true,
     },
     global: {
       headers: {
