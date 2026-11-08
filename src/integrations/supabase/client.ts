@@ -1,7 +1,5 @@
-// This file is self-hosted and configured for Supabase + Firebase Auth bridging.
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
-import { auth } from '@/lib/firebase';
 
 function createSupabaseClient() {
   const SUPABASE_URL = import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
@@ -33,7 +31,6 @@ function createSupabaseClient() {
 
 let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
 
-// Export the supabase client wrapper
 export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
   get(_, prop, receiver) {
     if (!_supabase) _supabase = createSupabaseClient();
