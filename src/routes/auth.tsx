@@ -42,7 +42,7 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [agree, setAgree] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
 
   // Supabase's auth listener updates this persisted session after sign-in/sign-up.
   useEffect(() => {
@@ -63,30 +63,36 @@ function AuthPage() {
           toast.error("Please agree to the terms to continue");
           return;
         }
+
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: { display_name: name.trim() || undefined },
-            emailRedirectTo: `${window.location.origin}/auth`,
-          },
+          options: { data: { display_name: name.trim() || undefined } },
         });
         if (error) throw error;
 
-        // If email confirmation is disabled in Supabase, signUp returns a session
-        // and the user can continue immediately. Otherwise Supabase sends a link.
-        if (data.session) {
-          toast.success("Account created");
-          void navigate({ to: safeNext(next), replace: true });
-        } else {
-          setEmailSent(true);
+        // Normally signUp returns a session when email confirmation is disabled.
+        // If this address already exists, Supabase may return no session; try
+        // authenticating with the submitted credentials rather than pretending the
+        // browser is signed in or storing credentials in localStorage.
+        if (!data.session) {
+          const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+          if (signInError) {
+            if (signInError.message.toLowerCase().includes("email not confirmed")) {
+              throw new Error("Supabase is still requiring email confirmation. Check that Confirm email is disabled on the Supabase project configured for this deployed site.");
+            }
+            throw signInError;
+          }
         }
+
+        toast.success("Account created");
+        void navigate({ to: safeNext(next), replace: true });
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
-        setEmailSent(true);
+        setResetEmailSent(true);
         toast.success("Reset link sent — check your inbox");
       }
     } catch (err) {
@@ -96,15 +102,13 @@ function AuthPage() {
     }
   }
 
-  if (emailSent) {
-    const isSignup = mode === "signup";
+  if (resetEmailSent) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
         <MailCheck className="mx-auto size-12 text-primary" aria-hidden />
         <h1 className="mt-4 font-display text-2xl font-bold">Check your email</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {isSignup ? "Supabase requires email confirmation for this project. A confirmation link was sent to " : "A password reset link was sent to "}
-          <strong>{email}</strong>. {isSignup ? "To skip confirmation, disable Confirm email in your Supabase Auth settings." : "Use the link to reset your password."}
+          A password reset link was sent to <strong>{email}</strong>. Use the link to reset your password.
         </p>
         <Button variant="outline" className="mt-6" asChild>
           <Link to="/store">Keep browsing</Link>
