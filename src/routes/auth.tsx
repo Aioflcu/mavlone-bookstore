@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 import { z } from "zod";
 import { toast } from "sonner";
 import { BookOpen, CircleCheck, Loader2, MailCheck } from "lucide-react";
@@ -56,24 +57,28 @@ function AuthPage() {
     navigate({ to: safeNext(next ?? stored ?? "/"), replace: true });
   }, [session, next, navigate]);
 
-  // Complete Firebase's redirect flow after the browser returns from Google.
+  // Complete Firebase's redirect flow after returning from Google. The auth-state
+  // listener below handles navigation once Firebase has restored the user.
   useEffect(() => {
     let active = true;
-    getRedirectResult(auth)
-      .then((result) => {
-        if (!active || !result) return;
-        const stored = window.sessionStorage.getItem(NEXT_KEY);
-        window.sessionStorage.removeItem(NEXT_KEY);
-        void navigate({ to: safeNext(next ?? stored ?? "/"), replace: true });
-      })
-      .catch((err) => {
-        if (!active) return;
-        window.sessionStorage.removeItem(NEXT_KEY);
-        toast.error(err instanceof Error ? err.message : "Sign-in failed");
-      });
+    getRedirectResult(auth).catch((err) => {
+      if (!active) return;
+      window.sessionStorage.removeItem(NEXT_KEY);
+      toast.error(err instanceof Error ? err.message : "Sign-in failed");
+    });
     return () => {
       active = false;
     };
+  }, []);
+
+  // Also route users who already have a Firebase session away from the login page.
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+      const stored = window.sessionStorage.getItem(NEXT_KEY);
+      window.sessionStorage.removeItem(NEXT_KEY);
+      void navigate({ to: safeNext(next ?? stored ?? "/"), replace: true });
+    });
   }, [navigate, next]);
 
   async function oauth() {
@@ -175,7 +180,7 @@ function AuthPage() {
 
         {mode !== "reset" && (
           <div className="mt-5 grid gap-2">
-            <Button variant="outline" onClick={() => oauth()}>
+            <Button variant="outline" onClick={() => void oauth()}>
               <svg viewBox="0 0 24 24" className="size-4" aria-hidden>
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z" />
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23Z" />
