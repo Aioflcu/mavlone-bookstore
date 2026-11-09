@@ -1,28 +1,22 @@
 import { useEffect, useState } from "react";
-import type { Session } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { type User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
-/** Lightweight client-side session state for header/menus (UI only — the server re-validates). */
+/** Lightweight client-side auth state for header/menus and route guards. */
 export function useSession() {
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted) {
-        setSession(data.session);
-        setLoading(false);
-      }
+    const unsubscribe = onAuthStateChanged(auth, (nextUser) => {
+      setUser(nextUser);
+      setLoading(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
-      if (mounted) setSession(s);
-    });
-    return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
-    };
+
+    return () => unsubscribe();
   }, []);
 
-  return { session, user: session?.user ?? null, loading };
+  const session = user ? ({ user } as { user: User }) : null;
+
+  return { session, user, loading };
 }
