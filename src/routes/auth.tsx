@@ -44,7 +44,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
-  // Supabase's auth listener updates this session after email/password sign-in.
+  // Supabase's auth listener updates this persisted session after sign-in/sign-up.
   useEffect(() => {
     if (!session) return;
     void navigate({ to: safeNext(next), replace: true });
@@ -63,7 +63,7 @@ function AuthPage() {
           toast.error("Please agree to the terms to continue");
           return;
         }
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -72,7 +72,15 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        setEmailSent(true);
+
+        // If email confirmation is disabled in Supabase, signUp returns a session
+        // and the user can continue immediately. Otherwise Supabase sends a link.
+        if (data.session) {
+          toast.success("Account created");
+          void navigate({ to: safeNext(next), replace: true });
+        } else {
+          setEmailSent(true);
+        }
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
@@ -95,8 +103,8 @@ function AuthPage() {
         <MailCheck className="mx-auto size-12 text-primary" aria-hidden />
         <h1 className="mt-4 font-display text-2xl font-bold">Check your email</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {isSignup ? "We sent a confirmation link to " : "We sent a password reset link to "}
-          <strong>{email}</strong>. {isSignup ? "Click it to activate your account." : "Click it to reset your password."}
+          {isSignup ? "Supabase requires email confirmation for this project. A confirmation link was sent to " : "A password reset link was sent to "}
+          <strong>{email}</strong>. {isSignup ? "To skip confirmation, disable Confirm email in your Supabase Auth settings." : "Use the link to reset your password."}
         </p>
         <Button variant="outline" className="mt-6" asChild>
           <Link to="/store">Keep browsing</Link>
